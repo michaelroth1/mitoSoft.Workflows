@@ -1,12 +1,33 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace mitoSoft.Workflows.Tests
 {
     [TestClass]
     public class StateMachineTests
     {
+        [TestMethod]
+        public void DebugOutput()
+        {
+            var result = new List<string>();
+
+            //States 
+            var stateMachine = new StateMachine()
+                .AddNode(new State("Start", () => Debug.WriteLine("Start")))
+                .AddNode(new State("State1", () => Debug.WriteLine("State1")))
+                .AddNode(new State("State2", () => Debug.WriteLine("State2")))
+                .AddNode(new State("End", () => Debug.WriteLine("End")))
+                .AddEdge("Start", "State1", () => { return true; })
+                .AddEdge("State1", "State2", () => { return true; })
+                .AddEdge("State2", "End", () => { return true; });
+
+            stateMachine.Invoke();
+
+            Assert.IsTrue(true);
+        }
+
         [TestMethod]
         public void Standard1()
         {

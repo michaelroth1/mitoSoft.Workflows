@@ -1,81 +1,62 @@
-# mitoSoft.Graphs
-A .net graph library to build directed graphs and investigate their properties, like:
-- investigates the shortest paths between two vertices
-- generate a completet path list outging from a node if the graph is a directed and acyclic 
-- is the graph acyclic 
-- produce the graph's incidence matrix
+# mitoSoft.Workflows
+A .net graph library to build statemachines and run them autonomously.
+Statemachines are build by states and transitions. Every transition has a
+condition and switch over form its predeccesor to its successor.
+By this concept it is possible to build simple straight forward statemachines as well
+as complex ones like:
+- time state machines
+- nested state machines
+- looped state machines
+- ... 
 
+## Dependencies
 
-## Example for shortest path determination via Dijkstra's Shortest Path algorithm
+This library based in the mitoSoft.Graphs library (Version 1.2.0 or higher).
 
-```c#
-public void CalculateShortestDistance()
-{
-  var shortesGraph = new Graph()
-	.AddNode("Start")
-	.AddNode("Middle1")
-	.AddNode("Middle2")
-	.AddNode("End")
-	.AddEdge("Start", "Middle1", 1, false)
-	.AddEdge("Start", "Middle2", 1, false)
-	.AddEdge("Middle1", "End", 1, false)
-	.AddEdge("Middle2", "End", 1, false);
-	
-	var shortesGraph = (new DijkstraAlgorithm(graph)).GetShortestGraph("Start", "End");
-
-    var endNode = shortesGraph.GetDistanceNode("End");
-    Assert.AreEqual(2, endNode.Distance);
-	
-	...  
-}
-```
-
-
-## Example for shortest path determination via a Deep-First-Search algorithm
-
-```c#
-public void CalculateShortestDistance()
-{
-  var shortesGraph = new Graph()
-	.AddNode("Start")
-	.AddNode("Middle1")
-	.AddNode("Middle2")
-	.AddNode("End")
-	.AddEdge("Start", "Middle1", 1, false)
-	.AddEdge("Start", "Middle2", 1, false)
-	.AddEdge("Middle1", "End", 1, false)
-	.AddEdge("Middle2", "End", 1, false)
-	.ToShortestGraph("Start", "End");
-
-    var endNode = shortesGraph.GetDistanceNode("End");
-    Assert.AreEqual(2, endNode.Distance);
-	
-	...  
-}
-```
-
-
-## Example for creating a shortes path grap via GraphViz
+## Example simple state machine
 
 ```c#
 
-private const string GraphVizBinPath = @"C:\Temp\Graphviz\bin";
+	var stateMachine = new StateMachine()
+		.AddNode(new State("Start", () => Debug.WriteLine("Start")))
+		.AddNode(new State("State1", () => Debug.WriteLine("State1")))
+		.AddNode(new State("State2", () => Debug.WriteLine("State2")))
+		.AddNode(new State("End", () => Debug.WriteLine("End")))
+		.AddEdge("Start", "State1", () => { return true; })
+		.AddEdge("State1", "State2", () => { return true; })
+		.AddEdge("State2", "End", () => { return true; });
 
-public void CalculateShortestDistance()
-{	
-  var image = new Graph()
-	.AddNode("Start")
-	.AddNode("Middle1")
-	.AddNode("Middle2")
-	.AddNode("End")
-	.AddEdge("Start", "Middle1", 1, false)
-	.AddEdge("Start", "Middle2", 1, false)
-	.AddEdge("Middle1", "End", 1, false)
-	.AddEdge("Middle2", "End", 1, false)
-	.ToImage(GraphVizBinPath);
-
+	stateMachine.Invoke();
 	...  
-}
+
 ```
 
-For more examples see the testclasses, e.g. [shortest path tests](mitoSoft.Graphs.Tests.NetCore/DeepFirstTests.cs) in testproject.
+
+## Example for a nested statemachine
+
+```c#
+
+    new StateMachine()
+		.AddNode(new State("Start"))
+		.AddNode(new State("State1",
+			() =>
+			{
+				result.Add("State1");
+				new StateMachine()
+					.AddNode(new State("InnerStart"))
+					.AddNode(new State("Inner1"))
+					.AddNode(new State("InnerEnd"))
+					.AddEdge("InnerStart", "Inner1", () => { return true; })
+					.AddEdge("Inner1", "InnerEnd", () => { return true; })
+					.Invoke();
+			}))
+		.AddNode(new State("End"))
+		.AddEdge("Start", "State1", () => { return true; })
+		.AddEdge("State1", "End", () => { return true; })
+		.Invoke();
+	
+	...  
+
+```
+
+# For more examples see the testclasses in [testproject](mitoSoft.Workflows.Tests.FullFramework.cproj).
