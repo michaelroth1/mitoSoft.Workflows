@@ -11,7 +11,7 @@ as complex ones like:
 
 ## Dependencies
 
-This library based in the mitoSoft.Graphs library (Version 1.2.0 or higher).
+This library based in the [mitoSoft.Graphs](https://github.com/michaelroth1/mitoSoft.Graphs) library (Version 1.2.0 or higher).
 
 ## Example simple state machine
 
