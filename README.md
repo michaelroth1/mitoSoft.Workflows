@@ -36,7 +36,7 @@ This library based in the mitoSoft.Graphs library (Version 1.2.0 or higher).
 
 ```c#
 
-    new StateMachine()
+	new StateMachine()
 		.AddNode(new State("Start"))
 		.AddNode(new State("State1",
 			() =>
