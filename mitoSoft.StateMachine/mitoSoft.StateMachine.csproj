@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>mitoSoft.Workflows</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company>mitoSoft</Company>
+    <Authors>mitoSoft</Authors>
+    <Description>Lightweight library for state machine handling. Allows the automated run of state machines by declarating states and transitions.</Description>
+    <Copyright>(c) mitoSoft</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.StateMachine</PackageProjectUrl>
+    <PackageIcon>mitoSoft.png</PackageIcon>
+    <PackageTags>Graph State Transtions Statemachine Workflow Automaton</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="mitoSoft.png" />
+    <None Include="..\..\..\..\..\WS_Git\mitoSoft.Graphs\mitoSoft.Graphs\mitoSoft.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="mitoSoft.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\WS_Git\mitoSoft.Graphs\mitoSoft.Graphs\mitoSoft.Graphs.csproj" />
+  </ItemGroup>
+
+</Project>
