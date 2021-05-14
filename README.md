@@ -59,4 +59,4 @@ This library based in the mitoSoft.Graphs library (Version 1.2.0 or higher).
 
 ```
 
-# For more examples see the testclasses in [testproject](mitoSoft.Workflows.Tests.FullFramework.cproj).
+For more examples see the testclasses in [testproject](mitoSoft.Workflows.Tests.FullFramework).
