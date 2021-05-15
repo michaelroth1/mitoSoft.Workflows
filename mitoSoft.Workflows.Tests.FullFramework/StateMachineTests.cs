@@ -62,7 +62,8 @@ namespace mitoSoft.Workflows.Tests
                 .AddEdge("State1", "State2", () => { return true; })
                 .AddEdge("State2", "End", () => { return true; });
 
-            stateMachine.Invoke("State1");
+            stateMachine.Start = stateMachine.GetNode("State1");
+            stateMachine.Invoke();
 
             Assert.AreEqual("State1->State2->End", string.Join("->", result));
         }
@@ -176,7 +177,7 @@ namespace mitoSoft.Workflows.Tests
                 })
                 .AddEdge("State1", "State2", () => { return true; })
                 .AddEdge("State2", "Start", () => { return true; })
-                .Invoke("Start");
+                .Invoke();
 
             Assert.AreEqual("Start->Start->Start->State1->State2->Start->End", string.Join("->", result));
         }
@@ -189,7 +190,7 @@ namespace mitoSoft.Workflows.Tests
             var i = 0;
             var state2Reached = false;
 
-            new StateMachine()
+            var stateMachine = new StateMachine()
                 .AddNode(new TestState("Start", result))
                 .AddNode(new TestState("State1", result))
                 .AddNode(new State("State2", () =>
@@ -209,8 +210,10 @@ namespace mitoSoft.Workflows.Tests
                     return i >= 3;
                 })
                 .AddEdge("State1", "State2", () => { return true; })
-                .AddEdge("State2", "Start", () => { return true; })
-                .Invoke("State1");
+                .AddEdge("State2", "Start", () => { return true; });
+
+            stateMachine.Start = stateMachine.GetNode("State1");
+            stateMachine.Invoke();
 
             Assert.AreEqual("State1->State2->Start->Start->Start->State1->State2->Start->End", string.Join("->", result));
         }
@@ -277,7 +280,7 @@ namespace mitoSoft.Workflows.Tests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void AbortTest()
+        public void Faulted()
         {
             //Variables
             var result = new List<string>();

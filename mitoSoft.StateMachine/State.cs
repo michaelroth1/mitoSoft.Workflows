@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 namespace mitoSoft.Workflows
 {
@@ -70,6 +71,11 @@ namespace mitoSoft.Workflows
             _stateExitFunction?.Invoke();
         }
 
+        internal void Execute()
+        {
+            this.Execute(new CancellationToken());
+        }
+
         /// <summary>
         /// Executes the StateMachine outgoing form this state
         /// </summary>
@@ -77,13 +83,17 @@ namespace mitoSoft.Workflows
         /// In case of more than one activated transitions -> first come first serve.
         /// For this reason it is possible to run states in parallel.
         /// </remarks>
-        internal void Execute()
+        internal void Execute(CancellationToken cancellationToken)
         {
             var switchover = false;
             State successor = null;
             var isFinal = this.Edges.All(t => t.Target == this);//es handel sich um einen Final-State
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             this.StateFunction();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             foreach (var transition in this.Edges.Where(t => t.Source == this))
             {
@@ -95,15 +105,17 @@ namespace mitoSoft.Workflows
                 }
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             this.StateExit();
-            
+
             if (switchover)
             {
-                successor.Execute();
+                successor.Execute(cancellationToken);
             }
             else if (!isFinal)
             {
-                this.Execute();
+                this.Execute(cancellationToken);
             }
         }
 

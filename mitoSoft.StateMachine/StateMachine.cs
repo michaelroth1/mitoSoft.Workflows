@@ -21,13 +21,6 @@ namespace mitoSoft.Workflows
             this.Start.Execute();
         }
 
-        public void Invoke(string name)
-        {
-            var state = this.GetNode(name);
-
-            state.Execute();
-        }
-
         /// <summary>
         /// Add a node to the state machine.
         /// </summary>
@@ -110,7 +103,7 @@ namespace mitoSoft.Workflows
                 source.AddEdge(edge);
                 return true;
             }
-            catch (Exception)
+            catch (System.Exception)
             {
                 edge = null;
                 return false;
