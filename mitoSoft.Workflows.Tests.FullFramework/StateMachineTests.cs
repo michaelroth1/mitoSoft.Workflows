@@ -274,5 +274,27 @@ namespace mitoSoft.Workflows.Tests
 
             Assert.AreEqual("Start->State1->InnerStart->Inner1->InnerEnd->End", string.Join("->", result));
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Exception()
+        {
+            //Variables
+            var result = new List<string>();
+            var now = DateTime.Now;
+
+            new StateMachine()
+                .AddNode(new TestState("Start", result))
+                .AddNode(new State("State1",
+                () =>
+                {
+                    result.Add("State1");
+                    throw new InvalidOperationException();
+                }))
+                .AddNode(new TestState("End", result))
+                .AddEdge("Start", "State1", () => { return true; })
+                .AddEdge("State1", "End", () => { return true; })
+                .Invoke();
+        }
     }
 }
