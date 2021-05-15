@@ -277,7 +277,7 @@ namespace mitoSoft.Workflows.Tests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Exception()
+        public void AbortTest()
         {
             //Variables
             var result = new List<string>();
