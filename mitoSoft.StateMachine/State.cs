@@ -79,22 +79,30 @@ namespace mitoSoft.Workflows
         /// </remarks>
         internal void Execute()
         {
+            var switchover = false;
+            State successor = null;
+            var isFinal = this.Edges.All(t => t.Target == this);//es handel sich um einen Final-State
+
             this.StateFunction();
 
-            if (this.Edges.Any(t => t.Source == this)) //es handel sich um einen Final-State
+            foreach (var transition in this.Edges.Where(t => t.Source == this))
             {
-                foreach (var transition in this.Edges.Where(t => t.Source == this))
+                if (transition.Check())
                 {
-                    if (transition.Check())
-                    {
-                        var successor = (State)transition.Target;
-                        successor.Execute();
-                        return;
-                    }
+                    successor = (State)transition.Target;
+                    switchover = true;
+                    break;
                 }
+            }
 
-                this.StateExit();
-
+            this.StateExit();
+            
+            if (switchover)
+            {
+                successor.Execute();
+            }
+            else if (!isFinal)
+            {
                 this.Execute();
             }
         }
