@@ -45,6 +45,9 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.2.1.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="mitoSoft.Graphs, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mitoSoft.Graphs.1.2.3\lib\netstandard2.0\mitoSoft.Graphs.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -57,10 +60,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\WS_Git\mitoSoft.Graphs\mitoSoft.Graphs\mitoSoft.Graphs.csproj">
-      <Project>{87ADA089-2897-40CD-86C3-C21703969145}</Project>
-      <Name>mitoSoft.Graphs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\mitoSoft.StateMachine\mitoSoft.StateMachine.csproj">
       <Project>{66e9ec0e-008f-43be-9d4b-75b85b56f899}</Project>
       <Name>mitoSoft.StateMachine</Name>

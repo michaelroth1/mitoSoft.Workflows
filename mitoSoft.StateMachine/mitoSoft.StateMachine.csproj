@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\WS_Git\mitoSoft.Graphs\mitoSoft.Graphs\mitoSoft.Graphs.csproj" />
+    <PackageReference Include="mitoSoft.Graphs" Version="1.2.3" />
   </ItemGroup>
 
 </Project>

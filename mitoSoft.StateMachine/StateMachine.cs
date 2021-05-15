@@ -8,8 +8,14 @@ namespace mitoSoft.Workflows
     [DebuggerDisplay(nameof(StateMachine) + " ({ToString()})")]
     public sealed class StateMachine : Graph<State, Transition>
     {
+        /// <summary>
+        /// Start state of the state machine
+        /// </summary>
         public State Start { get; set; }
 
+        /// <summary>
+        /// Invokes the state machine
+        /// </summary>
         public void Invoke()
         {
             this.Start.Execute();
@@ -22,6 +28,9 @@ namespace mitoSoft.Workflows
             state.Execute();
         }
 
+        /// <summary>
+        /// Add a node to the state machine.
+        /// </summary>
         public new StateMachine AddNode(State node)
         {
             if (this.Start == null)
@@ -35,7 +44,7 @@ namespace mitoSoft.Workflows
         }
               
         /// <summary>
-        /// Add an edge that connects the source node, given by the 'sourceName',
+        /// Add an edge to the state machine that connects the source node, given by the 'sourceName',
         /// and the target node, given by the 'targetName'.
         /// </summary>
         public StateMachine AddEdge(string sourceName, string targetName, Condition condition)
@@ -49,7 +58,7 @@ namespace mitoSoft.Workflows
         }
 
         /// <summary>
-        /// Add an edge that connects the 'source' node and the 'target' node.
+        /// Add an edge to the state machine that connects the 'source' node and the 'target' node.
         /// </summary>
         public StateMachine AddEdge(State source, State target, Condition condition)
         {
@@ -64,7 +73,7 @@ namespace mitoSoft.Workflows
         public new StateMachine AddEdge(Transition edge) => (StateMachine)base.AddEdge(edge);
 
         /// <summary>
-        /// Tries to add an edge that connects the source node, given bv the 'sourceName',
+        /// Tries to add an edge to the state machine that connects the source node, given bv the 'sourceName',
         /// and the target node, given by the 'targetName'.
         /// </summary>
         /// <returns>True when the edge was actually added or false when an existing edge already exists.</returns>
@@ -85,7 +94,7 @@ namespace mitoSoft.Workflows
         }
 
         /// <summary>
-        /// Tries to add an edge that connects the 'sourceNode' and the 'targetNode'.
+        /// Tries to add an edge to the state machine that connects the 'sourceNode' and the 'targetNode'.
         /// </summary>
         /// <returns>True when the edge was actually added or false when an existing edge already exists.</returns>
         public bool TryAddEdge(State source, State target, Condition condition, out Transition edge)
