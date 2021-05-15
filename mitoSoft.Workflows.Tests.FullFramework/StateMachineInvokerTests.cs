@@ -25,12 +25,12 @@ namespace mitoSoft.Workflows.Tests.FullFramework
               .AddEdge("State1", "State2", () => { return true; })
               .AddEdge("State2", "End", () => { return true; });
 
-            var invoker = new Invoker();
+            var invoker = new Invoker(stateMachine);
             invoker.Completed += (sender, args) =>
             {
                 completed = true;
             };
-            invoker.Invoke(stateMachine);
+            invoker.Invoke();
 
             Assert.AreEqual(true, completed);
         }
@@ -53,7 +53,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
               .AddEdge("State1", "State2", () => { return true; })
               .AddEdge("State2", "End", () => { return true; });
 
-            var invoker = new Invoker();
+            var invoker = new Invoker(stateMachine);
             invoker.Faulted += (sender, args) =>
             {
                 aborted = true;
@@ -62,7 +62,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
             {
                 completed = true;
             };
-            invoker.Invoke(stateMachine);
+            invoker.Invoke();
 
             Assert.AreEqual(false, completed);
             Assert.AreEqual(true, aborted);
@@ -86,13 +86,13 @@ namespace mitoSoft.Workflows.Tests.FullFramework
               .AddEdge("State1", "State2", () => { return true; })
               .AddEdge("State2", "End", () => { return true; });
 
-            var invoker = new Invoker();
+            var invoker = new Invoker(stateMachine);
             invoker.Completed += (sender, args) =>
             {
                 log.Add("Ended");
             };
 
-            var t = invoker.InvokeAsync(stateMachine);
+            var t = invoker.InvokeAsync();
 
             log.Add("Started");
 
@@ -120,7 +120,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
               .AddEdge("State1", "State2", () => { return true; })
               .AddEdge("State2", "End", () => { return true; });
 
-            var invoker = new Invoker();
+            var invoker = new Invoker(stateMachine);
             invoker.Started += (sender, args) =>
             {
                 token = args.CancellationTokenSource;
@@ -134,7 +134,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("Canceled");
             };
 
-            var t = invoker.InvokeAsync(stateMachine);
+            var t = invoker.InvokeAsync();
 
             Assert.AreEqual(false, token.IsCancellationRequested);
 
@@ -166,7 +166,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
               .AddEdge("State1", "State2", () => { return true; })
               .AddEdge("State2", "End", () => { return true; });
 
-            var invoker = new Invoker();
+            var invoker = new Invoker(stateMachine);
             invoker.Started += (sender, args) =>
             {
                 token = args.CancellationTokenSource;
@@ -180,7 +180,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 states.Add("Canceled");
             };
 
-            var t = invoker.InvokeAsync(stateMachine);
+            var t = invoker.InvokeAsync();
 
             Assert.AreEqual(false, token.IsCancellationRequested);
 
@@ -215,7 +215,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
               .AddEdge("State1", "State2", () => { return true; })
               .AddEdge("State2", "End", () => { return true; });
 
-            var invoker = new Invoker();
+            var invoker = new Invoker(stateMachine);
             invoker.Completed += (sender, args) =>
             {
                 log.Add("Ended");
@@ -225,7 +225,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("Canceled");
             };
 
-            var t = invoker.InvokeAsync(stateMachine);
+            var t = invoker.InvokeAsync();
 
             log.Add("Started");
 
@@ -262,7 +262,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 .AddEdge("Start", "State1", () => { return true; })
                 .AddEdge("State1", "End", () => { return true; });
 
-            var invoker = new Invoker();
+            var invoker = new Invoker(outer);
             invoker.Completed += (sender, args) =>
             {
                 log.Add("outer.Ended");
@@ -272,7 +272,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("outer.Canceled");
             };
 
-            var t = invoker.InvokeAsync(outer);
+            var t = invoker.InvokeAsync();
 
             t.Wait();
 
@@ -291,7 +291,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
             var inner1 = new TestStateMachine("inner1", 1000, log);
             var inner2 = new TestStateMachine("inner2", 100, log);
 
-            var outer = new StateMachine()
+            var stateMachine = new StateMachine()
                 .AddNode(new State("Start", () =>
                 {
                     log.Add("Start");
@@ -306,7 +306,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 .AddEdge("Start", "State1", () => { return true; })
                 .AddEdge("State1", "End", () => { return true; });
 
-            var invoker = new Invoker();
+            var invoker = new Invoker(stateMachine);
             invoker.Completed += (sender, args) =>
             {
                 log.Add("Ended");
@@ -317,12 +317,50 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("Canceled");
             };
 
-            var t = invoker.InvokeAsync(outer, TimeSpan.FromSeconds(1));
+            var t = invoker.InvokeAsync(TimeSpan.FromSeconds(1));
 
             t.Wait();
 
             Assert.AreEqual("Start->Canceled", string.Join("->", log));
             Assert.AreEqual(FaultType.ByTimeout, faultType);
+        }
+
+        /// <summary>
+        /// From here
+        /// https://docs.microsoft.com/de-de/dotnet/framework/windows-workflow-foundation/using-workflowinvoker-and-workflowapplication
+        /// </summary>
+        [TestMethod ]
+        public void MicroSoftWfAppComparison()
+        {
+            var log = new List<string>();
+
+            AutoResetEvent syncEvent = new AutoResetEvent(false);
+
+            var wf = new StateMachine()
+                .AddNode(new State("State1", () =>
+                {
+                    log.Add("Hello World");
+                }));
+
+            // Create the WorkflowApplication using the desired
+            // workflow definition.
+            var wfApp = new Invoker(wf);
+
+            // Handle the desired lifecycle events.
+            wfApp.Completed += (sender, args) =>
+            {
+                log.Add("Completed");
+                syncEvent.Set();
+            };
+
+            // Start the workflow.
+            wfApp.Invoke();
+
+            // Wait for Completed to arrive and signal that
+            // the workflow is complete.
+            syncEvent.WaitOne();
+
+            Assert.AreEqual("Hello World;Completed", string.Join(";", log));
         }
     }
 }

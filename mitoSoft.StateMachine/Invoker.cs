@@ -9,7 +9,13 @@ namespace mitoSoft.Workflows
 {
     public class Invoker
     {
+        public Invoker(StateMachine stateMachine)
+        {
+            _stateMachine = stateMachine;
+        }
+
         private CancellationTokenSource _tokenSource;
+        private StateMachine _stateMachine;
 
         public event EventHandler<StateMachineStartedAsyncronousEventArgs> Started;
 
@@ -17,32 +23,32 @@ namespace mitoSoft.Workflows
 
         public event EventHandler<StateMachineCompletedEventArgs> Completed;
 
-        public void Invoke(StateMachine stateMachine)
+        public void Invoke()
         {
-            this.Invoke(stateMachine, new CancellationTokenSource(), TimeSpan.Zero);
+            this.Invoke(new CancellationTokenSource(), TimeSpan.Zero);
         }
 
-        internal void Invoke(StateMachine stateMachine, CancellationTokenSource tokenSource, TimeSpan timeOut)
+        internal void Invoke(CancellationTokenSource tokenSource, TimeSpan timeOut)
         {
             try
             {
                 var timeOutTime = timeOut.GetTime();
 
-                stateMachine.Start.Execute(tokenSource.Token, timeOutTime);
+                _stateMachine.Start.Execute(tokenSource.Token, timeOutTime);
 
-                Completed?.Invoke(this, new StateMachineCompletedEventArgs(stateMachine));
+                Completed?.Invoke(this, new StateMachineCompletedEventArgs(_stateMachine));
             }
             catch (TimeoutException ex) when (ex.Message == "Timeout")
             {
-                Faulted?.Invoke(this, new StateMachineFaultedEventArgs(stateMachine, FaultType.ByTimeout, ex));
+                Faulted?.Invoke(this, new StateMachineFaultedEventArgs(_stateMachine, FaultType.ByTimeout, ex));
             }
             catch (OperationCanceledException ex)
             {
-                Faulted?.Invoke(this, new StateMachineFaultedEventArgs(stateMachine, FaultType.ByToken, ex));
+                Faulted?.Invoke(this, new StateMachineFaultedEventArgs(_stateMachine, FaultType.ByToken, ex));
             }
             catch (System.Exception ex)
             {
-                Faulted?.Invoke(this, new StateMachineFaultedEventArgs(stateMachine, FaultType.ByException, ex));
+                Faulted?.Invoke(this, new StateMachineFaultedEventArgs(_stateMachine, FaultType.ByException, ex));
             }
             finally
             {
@@ -50,18 +56,18 @@ namespace mitoSoft.Workflows
             }
         }
 
-        public Task InvokeAsync(StateMachine stateMachine)
+        public Task InvokeAsync()
         {
-            return this.InvokeAsync(stateMachine, TimeSpan.FromDays(5000.0));
+            return this.InvokeAsync(TimeSpan.FromDays(5000.0));
         }
 
-        public Task InvokeAsync(StateMachine stateMachine, TimeSpan timeOut)
+        public Task InvokeAsync(TimeSpan timeOut)
         {
             _tokenSource = new CancellationTokenSource();
 
             var task = Task.Run(() =>
             {
-                this.Invoke(stateMachine, _tokenSource, timeOut);
+                this.Invoke(_tokenSource, timeOut);
             });
 
             Started?.Invoke(this, new StateMachineStartedAsyncronousEventArgs(task, _tokenSource));
