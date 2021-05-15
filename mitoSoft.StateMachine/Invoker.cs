@@ -1,5 +1,6 @@
 ﻿using mitoSoft.Workflows.Enum;
 using mitoSoft.Workflows.EventArgs;
+using mitoSoft.Workflows.Extensions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,16 +19,22 @@ namespace mitoSoft.Workflows
 
         public void Invoke(StateMachine stateMachine)
         {
-            this.Invoke(stateMachine, new CancellationTokenSource());
+            this.Invoke(stateMachine, new CancellationTokenSource(), TimeSpan.Zero);
         }
 
-        internal void Invoke(StateMachine stateMachine, CancellationTokenSource tokenSource)
+        internal void Invoke(StateMachine stateMachine, CancellationTokenSource tokenSource, TimeSpan timeOut)
         {
             try
             {
-                stateMachine.Start.Execute(tokenSource.Token);
+                var timeOutTime = timeOut.GetTime();
+
+                stateMachine.Start.Execute(tokenSource.Token, timeOutTime);
 
                 Completed?.Invoke(this, new StateMachineCompletedEventArgs(stateMachine));
+            }
+            catch (TimeoutException ex) when (ex.Message == "Timeout")
+            {
+                Faulted?.Invoke(this, new StateMachineFaultedEventArgs(stateMachine, FaultType.ByTimeout, ex));
             }
             catch (OperationCanceledException ex)
             {
@@ -45,11 +52,16 @@ namespace mitoSoft.Workflows
 
         public Task InvokeAsync(StateMachine stateMachine)
         {
+            return this.InvokeAsync(stateMachine, TimeSpan.FromDays(5000.0));
+        }
+
+        public Task InvokeAsync(StateMachine stateMachine, TimeSpan timeOut)
+        {
             _tokenSource = new CancellationTokenSource();
 
             var task = Task.Run(() =>
             {
-                this.Invoke(stateMachine, _tokenSource);
+                this.Invoke(stateMachine, _tokenSource, timeOut);
             });
 
             Started?.Invoke(this, new StateMachineStartedAsyncronousEventArgs(task, _tokenSource));

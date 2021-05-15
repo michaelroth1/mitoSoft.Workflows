@@ -1,4 +1,5 @@
 ﻿using mitoSoft.Graphs;
+using mitoSoft.Workflows.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -71,9 +72,16 @@ namespace mitoSoft.Workflows
             _stateExitFunction?.Invoke();
         }
 
+        /// <summary>
+        /// Executes the StateMachine outgoing form this state
+        /// </summary>
+        /// <remarks>
+        /// In case of more than one activated transitions -> first come first serve.
+        /// For this reason it is possible to run states in parallel.
+        /// </remarks>
         internal void Execute()
         {
-            this.Execute(new CancellationToken());
+            this.Execute(new CancellationToken(), DateTime.UtcNow.AddYears(10));
         }
 
         /// <summary>
@@ -83,17 +91,19 @@ namespace mitoSoft.Workflows
         /// In case of more than one activated transitions -> first come first serve.
         /// For this reason it is possible to run states in parallel.
         /// </remarks>
-        internal void Execute(CancellationToken cancellationToken)
+        internal void Execute(CancellationToken cancellationToken, DateTime timeOut)
         {
             var switchover = false;
             State successor = null;
             var isFinal = this.Edges.All(t => t.Target == this);//es handel sich um einen Final-State
 
             cancellationToken.ThrowIfCancellationRequested();
+            timeOut.ThrowIfTimeExceeded();
 
             this.StateFunction();
 
             cancellationToken.ThrowIfCancellationRequested();
+            timeOut.ThrowIfTimeExceeded();
 
             foreach (var transition in this.Edges.Where(t => t.Source == this))
             {
@@ -106,16 +116,17 @@ namespace mitoSoft.Workflows
             }
 
             cancellationToken.ThrowIfCancellationRequested();
+            timeOut.ThrowIfTimeExceeded();
 
             this.StateExit();
 
             if (switchover)
             {
-                successor.Execute(cancellationToken);
+                successor.Execute(cancellationToken, timeOut);
             }
             else if (!isFinal)
             {
-                this.Execute(cancellationToken);
+                this.Execute(cancellationToken, timeOut);
             }
         }
 

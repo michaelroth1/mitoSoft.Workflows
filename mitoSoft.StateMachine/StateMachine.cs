@@ -2,11 +2,12 @@
 using mitoSoft.Graphs.Exceptions;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace mitoSoft.Workflows
 {
     [DebuggerDisplay(nameof(StateMachine) + " ({ToString()})")]
-    public sealed class StateMachine : Graph<State, Transition>
+    public class StateMachine : Graph<State, Transition>
     {
         /// <summary>
         /// Start state of the state machine
@@ -19,6 +20,14 @@ namespace mitoSoft.Workflows
         public void Invoke()
         {
             this.Start.Execute();
+        }
+
+        public Task InvokeAsyn()
+        {
+            return Task.Run(() =>
+            {
+                this.Invoke();
+            });
         }
 
         /// <summary>
@@ -35,7 +44,7 @@ namespace mitoSoft.Workflows
 
             return this;
         }
-              
+
         /// <summary>
         /// Add an edge to the state machine that connects the source node, given by the 'sourceName',
         /// and the target node, given by the 'targetName'.
