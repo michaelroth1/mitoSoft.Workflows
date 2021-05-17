@@ -253,8 +253,8 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 .AddNode(new State("State1", () =>
                 {
                     log.Add("outer.State1");
-                    var t1 = inner1.InvokeAsyn();
-                    var t2 = inner2.InvokeAsyn();
+                    var t1 = (new Invoker(inner1)).Invoke();
+                    var t2 = (new Invoker(inner1)).Invoke();
                     var tasks = new List<Task>() { t1, t2 };
                     Task.WaitAll(tasks.ToArray());
                 }))

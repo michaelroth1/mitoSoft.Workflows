@@ -21,14 +21,6 @@ namespace mitoSoft.Workflows
             this.Start.Execute();
         }
 
-        public Task InvokeAsyn()
-        {
-            return Task.Run(() =>
-            {
-                this.Invoke();
-            });
-        }
-
         /// <summary>
         /// Add a node to the state machine.
         /// </summary>

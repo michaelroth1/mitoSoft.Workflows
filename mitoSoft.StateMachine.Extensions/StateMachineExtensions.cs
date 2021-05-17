@@ -4,6 +4,10 @@ namespace mitoSoft.StateMachine.Extensions
 {
     public static class StateMachineExtensions
     {
+        /// <summary>
+        /// Converts a atate machine to a directed graph.
+        /// This allows the usage of all analysis functions of 'mitoSoft.Graphs.Analysis'.
+        /// </summary>
         public static DirectedGraph ToDirectedGraph(this Workflows.StateMachine stateMachine)
         {
             var directedGraph = new DirectedGraph();
