@@ -1,4 +1,4 @@
-name: publish mitoSoft.Graphs
+name: publish mitoSoft.Workflow
 on:
   push:
     branches:
