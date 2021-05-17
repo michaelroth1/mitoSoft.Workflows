@@ -9,6 +9,7 @@
     <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.StateMachine.Extensions</PackageProjectUrl>
     <PackageIcon>mitoSoft.png</PackageIcon>
     <PackageTags>Graph State Transtions Statemachine Workflow Automation Analysis</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
