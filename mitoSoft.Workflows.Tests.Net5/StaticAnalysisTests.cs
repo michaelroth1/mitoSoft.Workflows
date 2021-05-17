@@ -4,7 +4,7 @@ using mitoSoft.StateMachine.Extensions;
 using System.Diagnostics;
 using System.Linq;
 
-namespace mitoSoft.Workflows.Tests.FullFramework
+namespace mitoSoft.Workflows.Tests.Net5
 {
     [TestClass]
     public class StaticAnalysisTests

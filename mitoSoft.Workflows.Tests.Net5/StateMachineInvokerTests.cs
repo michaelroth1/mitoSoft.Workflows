@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace mitoSoft.Workflows.Tests.FullFramework
+namespace mitoSoft.Workflows.Tests.Net5
 {
     [TestClass]
     public class StateMachineInvokerTests
@@ -254,7 +254,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 {
                     log.Add("outer.State1");
                     var t1 = (new Invoker(inner1)).Invoke();
-                    var t2 = (new Invoker(inner1)).Invoke();
+                    var t2 = (new Invoker(inner2)).Invoke();
                     var tasks = new List<Task>() { t1, t2 };
                     Task.WaitAll(tasks.ToArray());
                 }))
@@ -334,7 +334,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
         {
             var log = new List<string>();
 
-            AutoResetEvent syncEvent = new AutoResetEvent(false);
+            AutoResetEvent syncEvent = new(false);
 
             var wf = new StateMachine()
                 .AddNode(new State("State1", () =>

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace mitoSoft.Workflows.Tests.FullFramework
+namespace mitoSoft.Workflows.Tests.Net5
 {
     internal class TestStateMachine : StateMachine
     {

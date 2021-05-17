@@ -65,9 +65,9 @@ namespace mitoSoft.Workflows
         {
             try
             {
-                var timeOutTime = timeout.GetTime();
+                var timeoutTime = timeout.GetTime();
 
-                _stateMachine.Start.Execute(tokenSource.Token, timeOutTime);
+                _stateMachine.Start.Execute(tokenSource.Token, timeoutTime);
 
                 Completed?.Invoke(this, new StateMachineCompletedEventArgs(_stateMachine));
             }

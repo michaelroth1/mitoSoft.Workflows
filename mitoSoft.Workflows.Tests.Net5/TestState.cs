@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace mitoSoft.Workflows.Tests
+namespace mitoSoft.Workflows.Tests.Net5
 {
     internal class TestState : State
     {
