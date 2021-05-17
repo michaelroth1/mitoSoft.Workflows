@@ -24,7 +24,7 @@ namespace mitoSoft.Workflows
         public event EventHandler<StateMachineCompletedEventArgs> Completed;
 
         /// <summary>
-        /// Starts a statemachine asynchronously
+        /// Invokes a state machine asynchronously
         /// </summary>
         public Task Invoke()
         {
@@ -32,7 +32,7 @@ namespace mitoSoft.Workflows
         }
 
         /// <summary>
-        /// Starts a statemachine asynchronously
+        /// Invokes a state machine asynchronously
         /// </summary>
         public Task Invoke(TimeSpan timeout)
         {
@@ -48,6 +48,13 @@ namespace mitoSoft.Workflows
             return task;
         }
 
+        /// <summary>
+        /// Cancels the run of a state machine
+        /// </summary>
+        /// <remarks>
+        /// The cancelation is only possible in the idle state of a state machine.
+        /// The idle state occurs before and after every statefunction execution.
+        /// </remarks>
         public bool Cancel()
         {
             _tokenSource.Cancel();

@@ -4,7 +4,7 @@ Statemachines are build by states and transitions. Every transition has a
 condition and switch over form its predeccesor to its successor.
 By this concept it is possible to build simple straight forward statemachines as well
 as complex ones like:
-- time state machines
+- timed state machines
 - nested state machines
 - looped state machines
 - ... 
