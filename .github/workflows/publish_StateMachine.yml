@@ -1,4 +1,4 @@
-name: publish mitoSoft.Workflow
+name: publish mitoSoft.StateMachine
 on:
   push:
     branches:
