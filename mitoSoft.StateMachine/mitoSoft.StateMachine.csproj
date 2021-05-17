@@ -10,7 +10,7 @@
     <Copyright>(c) mitoSoft</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.Workflows</PackageProjectUrl>
-    <PackageIcon></PackageIcon>
+    <PackageIcon>mitoSoft.png</PackageIcon>
     <PackageTags>Graph State Transtions Statemachine Workflow Automation</PackageTags>
     <Version>1.0.5</Version>
   </PropertyGroup>
@@ -18,6 +18,11 @@
   <ItemGroup>
     
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    
+    <None Include="mitoSoft.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
