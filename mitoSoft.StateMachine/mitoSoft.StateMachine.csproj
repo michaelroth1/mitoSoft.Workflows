@@ -9,9 +9,10 @@
     <Description>Lightweight library for state machine handling. Allows the automated run of state machines by declarating states and transitions.</Description>
     <Copyright>(c) mitoSoft</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.StateMachine</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.Workflows</PackageProjectUrl>
     <PackageIcon>mitoSoft.png</PackageIcon>
     <PackageTags>Graph State Transtions Statemachine Workflow Automation</PackageTags>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
