@@ -15,7 +15,7 @@ namespace mitoSoft.Workflows
         }
 
         private CancellationTokenSource _tokenSource;
-        private StateMachine _stateMachine;
+        private readonly StateMachine _stateMachine;
 
         public event EventHandler<StateMachineStartedAsyncronousEventArgs> Started;
 
@@ -23,16 +23,42 @@ namespace mitoSoft.Workflows
 
         public event EventHandler<StateMachineCompletedEventArgs> Completed;
 
-        public void Invoke()
+        /// <summary>
+        /// Starts a statemachine asynchronously
+        /// </summary>
+        public Task Invoke()
         {
-            this.Invoke(new CancellationTokenSource(), TimeSpan.Zero);
+            return this.Invoke(TimeSpan.FromDays(5000.0));
         }
 
-        internal void Invoke(CancellationTokenSource tokenSource, TimeSpan timeOut)
+        /// <summary>
+        /// Starts a statemachine asynchronously
+        /// </summary>
+        public Task Invoke(TimeSpan timeout)
+        {
+            _tokenSource = new CancellationTokenSource();
+
+            var task = Task.Run(() =>
+            {
+                this.Invoke(_tokenSource, timeout);
+            });
+
+            Started?.Invoke(this, new StateMachineStartedAsyncronousEventArgs(task, _tokenSource));
+
+            return task;
+        }
+
+        public bool Cancel()
+        {
+            _tokenSource.Cancel();
+            return _tokenSource.IsCancellationRequested;
+        }
+
+        internal void Invoke(CancellationTokenSource tokenSource, TimeSpan timeout)
         {
             try
             {
-                var timeOutTime = timeOut.GetTime();
+                var timeOutTime = timeout.GetTime();
 
                 _stateMachine.Start.Execute(tokenSource.Token, timeOutTime);
 
@@ -54,31 +80,6 @@ namespace mitoSoft.Workflows
             {
                 tokenSource.Dispose();
             }
-        }
-
-        public Task InvokeAsync()
-        {
-            return this.InvokeAsync(TimeSpan.FromDays(5000.0));
-        }
-
-        public Task InvokeAsync(TimeSpan timeOut)
-        {
-            _tokenSource = new CancellationTokenSource();
-
-            var task = Task.Run(() =>
-            {
-                this.Invoke(_tokenSource, timeOut);
-            });
-
-            Started?.Invoke(this, new StateMachineStartedAsyncronousEventArgs(task, _tokenSource));
-
-            return task;
-        }
-
-        public bool CancelAsync()
-        {
-            _tokenSource.Cancel();
-            return _tokenSource.IsCancellationRequested;
         }
     }
 }

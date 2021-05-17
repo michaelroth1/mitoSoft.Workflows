@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mitoSoft.StateMachine", "mi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mitoSoft.Workflows.Tests.FullFramework", "mitoSoft.Workflows.Tests.FullFramework\mitoSoft.Workflows.Tests.FullFramework.csproj", "{CCAF93FA-5F2B-40F6-A31E-A90384508E2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mitoSoft.StateMachine.Extensions", "mitoSoft.StateMachine.Extensions\mitoSoft.StateMachine.Extensions.csproj", "{C92B7523-DA76-4412-A834-3A6531605D31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{CCAF93FA-5F2B-40F6-A31E-A90384508E2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CCAF93FA-5F2B-40F6-A31E-A90384508E2E}.Release|x86.ActiveCfg = Release|Any CPU
 		{CCAF93FA-5F2B-40F6-A31E-A90384508E2E}.Release|x86.Build.0 = Release|Any CPU
+		{C92B7523-DA76-4412-A834-3A6531605D31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C92B7523-DA76-4412-A834-3A6531605D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C92B7523-DA76-4412-A834-3A6531605D31}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C92B7523-DA76-4412-A834-3A6531605D31}.Debug|x86.Build.0 = Debug|Any CPU
+		{C92B7523-DA76-4412-A834-3A6531605D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C92B7523-DA76-4412-A834-3A6531605D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C92B7523-DA76-4412-A834-3A6531605D31}.Release|x86.ActiveCfg = Release|Any CPU
+		{C92B7523-DA76-4412-A834-3A6531605D31}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

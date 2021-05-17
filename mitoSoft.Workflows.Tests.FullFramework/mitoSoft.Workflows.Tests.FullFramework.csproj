@@ -48,6 +48,9 @@
     <Reference Include="mitoSoft.Graphs, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\mitoSoft.Graphs.1.2.3\lib\netstandard2.0\mitoSoft.Graphs.dll</HintPath>
     </Reference>
+    <Reference Include="mitoSoft.Graphs.Analysis, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mitoSoft.Graphs.Analysis.1.2.1\lib\netstandard2.0\mitoSoft.Graphs.Analysis.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -57,11 +60,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateMachineInvokerTests.cs" />
     <Compile Include="TestStateMachine.cs" />
+    <Compile Include="StaticAnalysisTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\mitoSoft.StateMachine.Extensions\mitoSoft.StateMachine.Extensions.csproj">
+      <Project>{c92b7523-da76-4412-a834-3a6531605d31}</Project>
+      <Name>mitoSoft.StateMachine.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\mitoSoft.StateMachine\mitoSoft.StateMachine.csproj">
       <Project>{66e9ec0e-008f-43be-9d4b-75b85b56f899}</Project>
       <Name>mitoSoft.StateMachine</Name>

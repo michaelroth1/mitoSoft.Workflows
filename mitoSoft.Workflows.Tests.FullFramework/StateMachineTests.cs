@@ -9,7 +9,7 @@ namespace mitoSoft.Workflows.Tests
     public class StateMachineTests
     {
         [TestMethod]
-        public void DebugOutput()
+        public void Standard1()
         {
             var log = new List<string>();
 
@@ -28,7 +28,7 @@ namespace mitoSoft.Workflows.Tests
         }
 
         [TestMethod]
-        public void Standard1()
+        public void Standard2()
         {
             var log = new List<string>();
 
@@ -44,6 +44,25 @@ namespace mitoSoft.Workflows.Tests
             stateMachine.Invoke();
 
             Assert.AreEqual("Start->State1->State2->End", string.Join("->", log));
+        }
+
+        [TestMethod]
+        public void Standard3()
+        {
+            var log = new List<string>();
+
+            var stateMachine = new StateMachine()
+                .AddNode(new TestState("Start", log))
+                .AddNode(new TestState("State1", log))
+                .AddNode(new TestState("State2", log))
+                .AddNode(new TestState("End", log))
+                .AddEdge("Start", "State1", () => { return false; })
+                .AddEdge("Start", "State2", () => { return true; })
+                .AddEdge("State2", "End", () => { return true; });
+
+            stateMachine.Invoke();
+
+            Assert.AreEqual("Start->State2->End", string.Join("->", log));
         }
 
         [TestMethod]
@@ -64,25 +83,6 @@ namespace mitoSoft.Workflows.Tests
             stateMachine.Invoke();
 
             Assert.AreEqual("State1->State2->End", string.Join("->", log));
-        }
-
-        [TestMethod]
-        public void Standard2()
-        {
-            var log = new List<string>();
-
-            var stateMachine = new StateMachine()
-                .AddNode(new TestState("Start", log))
-                .AddNode(new TestState("State1", log))
-                .AddNode(new TestState("State2", log))
-                .AddNode(new TestState("End", log))
-                .AddEdge("Start", "State1", () => { return false; })
-                .AddEdge("Start", "State2", () => { return true; })
-                .AddEdge("State2", "End", () => { return true; });
-
-            stateMachine.Invoke();
-
-            Assert.AreEqual("Start->State2->End", string.Join("->", log));
         }
 
         [TestMethod]

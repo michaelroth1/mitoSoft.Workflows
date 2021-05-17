@@ -30,7 +30,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
             {
                 completed = true;
             };
-            invoker.Invoke();
+            invoker.Invoke().Wait();
 
             Assert.AreEqual(true, completed);
         }
@@ -62,7 +62,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
             {
                 completed = true;
             };
-            invoker.Invoke();
+            invoker.Invoke().Wait();
 
             Assert.AreEqual(false, completed);
             Assert.AreEqual(true, aborted);
@@ -92,7 +92,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("Ended");
             };
 
-            var t = invoker.InvokeAsync();
+            var t = invoker.Invoke();
 
             log.Add("Started");
 
@@ -134,7 +134,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("Canceled");
             };
 
-            var t = invoker.InvokeAsync();
+            var t = invoker.Invoke();
 
             Assert.AreEqual(false, token.IsCancellationRequested);
 
@@ -180,7 +180,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 states.Add("Canceled");
             };
 
-            var t = invoker.InvokeAsync();
+            var t = invoker.Invoke();
 
             Assert.AreEqual(false, token.IsCancellationRequested);
 
@@ -225,14 +225,14 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("Canceled");
             };
 
-            var t = invoker.InvokeAsync();
+            var t = invoker.Invoke();
 
             log.Add("Started");
 
             Thread.Sleep(100);
 
             log.Add("BeforeCancelRequested");
-            invoker.CancelAsync();
+            invoker.Cancel();
             log.Add("AfterCancelRequested");
 
             t.Wait();
@@ -272,7 +272,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("outer.Canceled");
             };
 
-            var t = invoker.InvokeAsync();
+            var t = invoker.Invoke();
 
             t.Wait();
 
@@ -317,7 +317,7 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 log.Add("Canceled");
             };
 
-            var t = invoker.InvokeAsync(TimeSpan.FromSeconds(1));
+            var t = invoker.Invoke(TimeSpan.FromSeconds(1));
 
             t.Wait();
 

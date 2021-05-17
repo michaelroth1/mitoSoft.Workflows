@@ -40,8 +40,7 @@ This library based in the [mitoSoft.Graphs](https://github.com/michaelroth1/mito
     .AddNode(new State("Start"))
     .AddNode(new State("State1",
     () =>
-    {
-      result.Add("State1");
+    {      
       new StateMachine()
         .AddNode(new State("InnerStart"))
         .AddNode(new State("Inner1"))

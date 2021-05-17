@@ -11,7 +11,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.StateMachine</PackageProjectUrl>
     <PackageIcon>mitoSoft.png</PackageIcon>
-    <PackageTags>Graph State Transtions Statemachine Workflow Automaton</PackageTags>
+    <PackageTags>Graph State Transtions Statemachine Workflow Automation</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

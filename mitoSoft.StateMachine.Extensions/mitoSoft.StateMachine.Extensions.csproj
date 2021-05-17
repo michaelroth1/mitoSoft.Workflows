@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>mitoSoft</Authors>
+    <Copyright>(c) mitoSoft</Copyright>
+    <Description>Allows the stat machine analysis by using the analyisis functions of 'mitoSoft.Graphs.Analysis'</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.StateMachine.Extensions</PackageProjectUrl>
+    <PackageIcon>mitoSoft.png</PackageIcon>
+    <PackageTags>Graph State Transtions Statemachine Workflow Automation Analysis</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="mitoSoft.png" />
+    <None Include="mitoSoft.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="mitoSoft.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="mitoSoft.Graphs" Version="1.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\mitoSoft.StateMachine\mitoSoft.StateMachine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

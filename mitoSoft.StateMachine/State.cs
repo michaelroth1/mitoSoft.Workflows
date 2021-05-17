@@ -81,7 +81,7 @@ namespace mitoSoft.Workflows
         /// </remarks>
         internal void Execute()
         {
-            this.Execute(new CancellationToken(), DateTime.UtcNow.AddYears(10));
+            this.Execute(new CancellationToken(), new DateTime());
         }
 
         /// <summary>
@@ -91,19 +91,19 @@ namespace mitoSoft.Workflows
         /// In case of more than one activated transitions -> first come first serve.
         /// For this reason it is possible to run states in parallel.
         /// </remarks>
-        internal void Execute(CancellationToken cancellationToken, DateTime timeOut)
+        internal void Execute(CancellationToken cancellationToken, DateTime timeout)
         {
             var switchover = false;
             State successor = null;
             var isFinal = this.Edges.All(t => t.Target == this);//es handel sich um einen Final-State
 
             cancellationToken.ThrowIfCancellationRequested();
-            timeOut.ThrowIfTimeExceeded();
+            timeout.ThrowIfTimeExceeded();
 
             this.StateFunction();
 
             cancellationToken.ThrowIfCancellationRequested();
-            timeOut.ThrowIfTimeExceeded();
+            timeout.ThrowIfTimeExceeded();
 
             foreach (var transition in this.Edges.Where(t => t.Source == this))
             {
@@ -116,17 +116,17 @@ namespace mitoSoft.Workflows
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            timeOut.ThrowIfTimeExceeded();
+            timeout.ThrowIfTimeExceeded();
 
             this.StateExit();
 
             if (switchover)
             {
-                successor.Execute(cancellationToken, timeOut);
+                successor.Execute(cancellationToken, timeout);
             }
             else if (!isFinal)
             {
-                this.Execute(cancellationToken, timeOut);
+                this.Execute(cancellationToken, timeout);
             }
         }
 
