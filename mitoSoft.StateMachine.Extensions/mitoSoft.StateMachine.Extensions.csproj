@@ -10,20 +10,8 @@
     <PackageIcon>mitoSoft.png</PackageIcon>
     <PackageTags>Graph State Transtions Statemachine Workflow Automation Analysis</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="mitoSoft.png" />
-    <None Include="mitoSoft.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="mitoSoft.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\mitoSoft.StateMachine\mitoSoft.StateMachine.csproj" />
