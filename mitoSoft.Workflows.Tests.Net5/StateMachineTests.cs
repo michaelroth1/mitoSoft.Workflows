@@ -9,6 +9,76 @@ namespace mitoSoft.Workflows.Tests.Net5
     public class StateMachineTests
     {
         [TestMethod]
+        public void SelfReference()
+        {
+            var log = new List<string>();
+
+            var stateMachine = new StateMachine();
+            stateMachine.AddNode(new TestState("Start", log));
+            stateMachine.AddNode(new TestState("State1", log));
+            stateMachine.AddNode(new TestState("State2", log));
+            stateMachine.AddNode(new TestState("End", log));
+            stateMachine.AddEdge("Start", "State1", () => { return true; });
+            stateMachine.AddEdge("State1", "State1", () => { return false; });
+            stateMachine.AddEdge("State1", "State2", () => { return true; });
+            stateMachine.AddEdge("State2", "End", () => { return true; });
+
+            stateMachine.Invoke();
+
+            Assert.AreEqual("Start->State1->State2->End", string.Join("->", log));
+        }
+
+        [TestMethod]
+        public void SelfReferenceLoop1()
+        {
+            var log = new List<string>();
+            bool loop = false;
+
+            var stateMachine = new StateMachine();
+            stateMachine.AddNode(new TestState("Start", log));
+            stateMachine.AddNode(new TestState("State1", log));
+            stateMachine.AddNode(new TestState("State2", log));
+            stateMachine.AddNode(new TestState("End", log));
+            stateMachine.AddEdge("Start", "State1", () => { return true; });
+            stateMachine.AddEdge("State1", "State1", () =>
+            {
+                loop = !loop;
+                return loop;
+            });
+            stateMachine.AddEdge("State1", "State2", () => { return true; });
+            stateMachine.AddEdge("State2", "End", () => { return true; });
+
+            stateMachine.Invoke();
+
+            Assert.AreEqual("Start->State1->State1->State2->End", string.Join("->", log));
+        }
+
+        [TestMethod]
+        public void SelfReferenceLoop2()
+        {
+            var log = new List<string>();
+            bool loop = false;
+
+            var stateMachine = new StateMachine();
+            stateMachine.AddNode(new TestState("Start", log));
+            stateMachine.AddNode(new TestState("State1", log));
+            stateMachine.AddNode(new TestState("State2", log));
+            stateMachine.AddNode(new TestState("End", log));
+            stateMachine.AddEdge("Start", "State1", () => { return true; });
+            stateMachine.AddEdge("State1", "State2", () => { return loop; });
+            stateMachine.AddEdge("State1", "State1", () =>
+            {
+                loop = !loop;
+                return loop;
+            });
+            stateMachine.AddEdge("State2", "End", () => { return true; });
+
+            stateMachine.Invoke();
+
+            Assert.AreEqual("Start->State1->State1->State2->End", string.Join("->", log));
+        }
+
+        [TestMethod]
         public void Standard1()
         {
             var log = new List<string>();
@@ -106,8 +176,8 @@ namespace mitoSoft.Workflows.Tests.Net5
 
             var t = new Transition(start, state2, () =>
             {
+                log.Add("Edge1");
                 i++;
-
                 return i >= 3;
             });
 
@@ -117,7 +187,7 @@ namespace mitoSoft.Workflows.Tests.Net5
 
             stateMachine.Invoke();
 
-            Assert.AreEqual("Start->Start->Start->State2->End", string.Join("->", log));
+            Assert.AreEqual("Start->Edge1->Edge1->Edge1->State2->End", string.Join("->", log));
         }
 
         [TestMethod]
@@ -135,14 +205,14 @@ namespace mitoSoft.Workflows.Tests.Net5
                 .AddEdge("Start", "State1", () => { return false; })
                 .AddEdge("Start", "State2", () =>
                 {
+                    log.Add("Edge1");
                     i++;
-
                     return i >= 3;
                 })
                 .AddEdge("State2", "End", () => { return true; })
                 .Invoke();
 
-            Assert.AreEqual("Start->Start->Start->State2->End", string.Join("->", log));
+            Assert.AreEqual("Start->Edge1->Edge1->Edge1->State2->End", string.Join("->", log));
         }
 
         [TestMethod]
@@ -168,15 +238,15 @@ namespace mitoSoft.Workflows.Tests.Net5
                 })
                 .AddEdge("Start", "State1", () =>
                 {
+                    log.Add("Edge1");
                     i++;
-
                     return i >= 3;
                 })
                 .AddEdge("State1", "State2", () => { return true; })
                 .AddEdge("State2", "Start", () => { return true; })
                 .Invoke();
 
-            Assert.AreEqual("Start->Start->Start->State1->State2->Start->End", string.Join("->", log));
+            Assert.AreEqual("Start->Edge1->Edge1->Edge1->State1->State2->Start->End", string.Join("->", log));
         }
 
         [TestMethod]
@@ -202,8 +272,8 @@ namespace mitoSoft.Workflows.Tests.Net5
                 })
                 .AddEdge("Start", "State1", () =>
                 {
+                    log.Add("Edge1");
                     i++;
-
                     return i >= 3;
                 })
                 .AddEdge("State1", "State2", () => { return true; })
@@ -212,7 +282,7 @@ namespace mitoSoft.Workflows.Tests.Net5
             stateMachine.Start = stateMachine.GetNode("State1");
             stateMachine.Invoke();
 
-            Assert.AreEqual("State1->State2->Start->Start->Start->State1->State2->Start->End", string.Join("->", log));
+            Assert.AreEqual("State1->State2->Start->Edge1->Edge1->Edge1->State1->State2->Start->End", string.Join("->", log));
         }
 
         [TestMethod]
@@ -238,12 +308,13 @@ namespace mitoSoft.Workflows.Tests.Net5
                 .AddEdge("Start", "State1", () => { return true; })
                 .AddEdge("State1", "State2", () =>
                 {
+                    log.Add("Edge1");
                     return DateTime.Now >= now.AddSeconds(4); //results in 5 cycles of State1 due to the fact the execution takes more than zero time
                 })
                 .AddEdge("State2", "End", () => { return true; })
                 .Invoke();
 
-            Assert.AreEqual("Start->State1->State1->State1->State1->State1->State2->End", string.Join("->", log));
+            Assert.AreEqual("Start->State1->Edge1->Edge1->Edge1->Edge1->Edge1->State2->End", string.Join("->", log));
         }
 
         [TestMethod]

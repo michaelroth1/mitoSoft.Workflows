@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace mitoSoft.Workflows.Tests.Net5
+namespace mitoSoft.Workflows.Tests.FullFramework
 {
     [TestClass]
     public class StateMachineInvokerTests
@@ -334,7 +334,7 @@ namespace mitoSoft.Workflows.Tests.Net5
         {
             var log = new List<string>();
 
-            AutoResetEvent syncEvent = new(false);
+            AutoResetEvent syncEvent = new AutoResetEvent(false);
 
             var wf = new StateMachine()
                 .AddNode(new State("State1", () =>

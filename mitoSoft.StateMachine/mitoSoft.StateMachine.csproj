@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.Workflows</PackageProjectUrl>
     <PackageIcon>mitoSoft.png</PackageIcon>
     <PackageTags>Graph State Transtions Statemachine Workflow Automation</PackageTags>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mitoSoft.Graphs" Version="1.2.3" />
+    <PackageReference Include="mitoSoft.Graphs" Version="1.3.0" />
   </ItemGroup>
 
 </Project>

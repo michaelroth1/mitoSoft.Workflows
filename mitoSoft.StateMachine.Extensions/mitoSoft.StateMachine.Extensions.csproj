@@ -10,7 +10,7 @@
     <PackageIcon>mitoSoft.png</PackageIcon>
     <PackageTags>Graph State Transtions Statemachine Workflow Automation Analysis</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,10 +23,6 @@
 
   <ItemGroup>
     <Content Include="mitoSoft.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="mitoSoft.Graphs" Version="1.2.3" />
   </ItemGroup>
 
   <ItemGroup>
