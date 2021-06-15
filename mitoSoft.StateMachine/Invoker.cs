@@ -28,7 +28,15 @@ namespace mitoSoft.Workflows
         /// </summary>
         public Task Invoke()
         {
-            return this.Invoke(TimeSpan.FromDays(5000.0));
+            return this.Invoke(this._stateMachine.Start.Name);
+        }
+
+        /// <summary>
+        /// Invokes a state machine asynchronously
+        /// </summary>
+        public Task Invoke(string nodeName)
+        { 
+            return this.Invoke(nodeName, TimeSpan.FromDays(5000.0));
         }
 
         /// <summary>
@@ -36,11 +44,19 @@ namespace mitoSoft.Workflows
         /// </summary>
         public Task Invoke(TimeSpan timeout)
         {
+            return this.Invoke(this._stateMachine.Start.Name, timeout);
+        }
+
+        /// <summary>
+        /// Invokes a state machine asynchronously
+        /// </summary>
+        public Task Invoke(string nodeName, TimeSpan timeout)
+        {
             _tokenSource = new CancellationTokenSource();
 
             var task = Task.Run(() =>
             {
-                this.Invoke(_tokenSource, timeout);
+                this.Invoke(nodeName, _tokenSource, timeout);
             });
 
             Started?.Invoke(this, new StateMachineStartedAsyncronousEventArgs(task, _tokenSource));
@@ -61,13 +77,15 @@ namespace mitoSoft.Workflows
             return _tokenSource.IsCancellationRequested;
         }
 
-        internal void Invoke(CancellationTokenSource tokenSource, TimeSpan timeout)
+        internal void Invoke(string nodeName, CancellationTokenSource tokenSource, TimeSpan timeout)
         {
             try
             {
                 var timeoutTime = timeout.GetTime();
 
-                _stateMachine.Start.Execute(tokenSource.Token, timeoutTime);
+                var node = this._stateMachine.GetNode(nodeName);
+
+                node.Execute(tokenSource.Token, timeoutTime);
 
                 Completed?.Invoke(this, new StateMachineCompletedEventArgs(_stateMachine));
             }
