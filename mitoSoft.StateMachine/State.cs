@@ -92,7 +92,7 @@ namespace mitoSoft.Workflows
         /// For this reason it is possible to run states in parallel.
         /// </remarks>
         internal void Execute(CancellationToken cancellationToken, DateTime timeout)
-        {     
+        {
             cancellationToken.ThrowIfCancellationRequested();
             timeout.ThrowIfTimeExceeded();
 
@@ -108,7 +108,7 @@ namespace mitoSoft.Workflows
         {
             var switchover = false;
             State successor = null;
-            
+
             foreach (var transition in this.Edges.Where(t => t.Source == this))
             {
                 if (transition.Check())
@@ -132,7 +132,7 @@ namespace mitoSoft.Workflows
             }
             else if (!isFinal) //!switchover
             {
-                this.CheckTransitions( cancellationToken, timeout);
+                this.CheckTransitions(cancellationToken, timeout);
             }
         }
 
