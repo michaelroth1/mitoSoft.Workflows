@@ -19,6 +19,8 @@ namespace mitoSoft.StateMachine.Extensions
             foreach (var edge in stateMachine.Edges)
             {
                 directedGraph.AddEdge(edge.Source.Name, edge.Target.Name, 1, false);
+                var graphEdge = directedGraph.GetEdge(edge.Source.Name, edge.Target.Name);
+                graphEdge.Description = edge.Description;
             }
 
             return directedGraph;
