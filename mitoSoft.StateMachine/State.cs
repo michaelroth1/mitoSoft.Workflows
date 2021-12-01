@@ -79,18 +79,6 @@ namespace mitoSoft.Workflows
         /// In case of more than one activated transitions -> first come first serve.
         /// For this reason it is possible to run states in parallel.
         /// </remarks>
-        internal void Execute()
-        {
-            this.Execute(new CancellationToken(), new DateTime());
-        }
-
-        /// <summary>
-        /// Executes the StateMachine outgoing form this state
-        /// </summary>
-        /// <remarks>
-        /// In case of more than one activated transitions -> first come first serve.
-        /// For this reason it is possible to run states in parallel.
-        /// </remarks>
         internal void Execute(CancellationToken cancellationToken, DateTime timeout)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -100,40 +88,23 @@ namespace mitoSoft.Workflows
 
             cancellationToken.ThrowIfCancellationRequested();
             timeout.ThrowIfTimeExceeded();
-
-            CheckTransitions(cancellationToken, timeout);
         }
 
-        private void CheckTransitions(CancellationToken cancellationToken, DateTime timeout)
+        public bool GetSuccessor(out State successor)
         {
-            var switchover = false;
-            State successor = null;
-
             foreach (var transition in this.Edges.Where(t => t.Source == this))
             {
                 if (transition.Check())
                 {
                     successor = (State)transition.Target;
-                    switchover = true;
-                    break;
+                    return true;
                 }
             }
 
-            cancellationToken.ThrowIfCancellationRequested();
-            timeout.ThrowIfTimeExceeded();
+            var isFinal = this.Edges.All(t => t.Target == this); //it is a final-state
 
-            this.StateExit();
-
-            var isFinal = this.Edges.All(t => t.Target == this);//es handel sich um einen Final-State
-
-            if (switchover)
-            {
-                successor.Execute(cancellationToken, timeout);
-            }
-            else if (!isFinal) //!switchover
-            {
-                this.CheckTransitions(cancellationToken, timeout);
-            }
+            successor = null;
+            return isFinal;
         }
 
         public override string ToString() => $"{this.Name} (Transitions: {this._edges.Count})";

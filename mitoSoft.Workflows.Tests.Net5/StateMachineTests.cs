@@ -286,6 +286,32 @@ namespace mitoSoft.Workflows.Tests.Net5
         }
 
         [TestMethod]
+        public void A_B_C_D_E_B_C_D_E_F()
+        {
+            //Variables
+            var log = new List<string>();
+            var exit = false;
+            var stateMachine = new StateMachine()
+                .AddNode(new TestState("a", log))
+                .AddNode(new TestState("b", log))
+                .AddNode(new TestState("c", log))
+                .AddNode(new TestState("d", log))
+                .AddNode(new TestState("e", log))
+                .AddNode(new TestState("f", log))
+                .AddEdge("a", "b", () => { return true; })
+                .AddEdge("b", "c", () => { return true; })
+                .AddEdge("c", "d", () => { return true; })
+                .AddEdge("d", "e", () => { return true; })
+                .AddEdge("e", "b", () => { var result = !exit; exit = true; return result; })
+                .AddEdge("e", "f", () => { return exit; });
+
+            stateMachine.Start = stateMachine.GetNode("a");
+            stateMachine.Invoke();
+
+            Assert.AreEqual("a->b->c->d->e->b->c->d->e->f", string.Join("->", log));
+        }
+
+        [TestMethod]
         public void TimedTransition()
         {
             //Variables

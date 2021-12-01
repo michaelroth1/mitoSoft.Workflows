@@ -35,7 +35,7 @@ namespace mitoSoft.Workflows
         /// Invokes a state machine asynchronously
         /// </summary>
         public Task Invoke(string nodeName)
-        { 
+        {
             return this.Invoke(nodeName, TimeSpan.FromDays(5000.0));
         }
 
@@ -85,7 +85,7 @@ namespace mitoSoft.Workflows
 
                 var node = this._stateMachine.GetNode(nodeName);
 
-                node.Execute(tokenSource.Token, timeoutTime);
+                this._stateMachine.StateExecute(node, tokenSource.Token, timeoutTime);
 
                 Completed?.Invoke(this, new StateMachineCompletedEventArgs(_stateMachine));
             }

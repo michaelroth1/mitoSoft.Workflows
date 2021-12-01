@@ -13,7 +13,7 @@ namespace mitoSoft.Workflows.Tests.Net5
 
         public override void StateFunction()
         {
-            this._output.Add(this.Name);
+            this._output?.Add(this.Name);
         }
     }
 }

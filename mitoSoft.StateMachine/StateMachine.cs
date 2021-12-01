@@ -1,13 +1,19 @@
 ﻿using mitoSoft.Graphs;
 using mitoSoft.Graphs.Exceptions;
+using mitoSoft.Workflows.Extensions;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace mitoSoft.Workflows
 {
     [DebuggerDisplay(nameof(StateMachine) + " ({ToString()})")]
     public class StateMachine : Graph<State, Transition>
     {
+        //
+        private List<State> _callStack = new List<State>();
+
         /// <summary>
         /// Start state of the state machine
         /// </summary>
@@ -18,7 +24,48 @@ namespace mitoSoft.Workflows
         /// </summary>
         public void Invoke()
         {
-            this.Start.Execute();
+            this.Invoke(new CancellationToken(), new DateTime());
+        }
+
+        /// <summary>
+        /// Invokes the state machine
+        /// </summary>
+        public void Invoke(CancellationToken cancellationToken, DateTime timeout)
+        {
+            this._callStack = new List<State>();
+
+            var state = this.Start;
+
+            StateExecute(state, cancellationToken, timeout);
+        }
+
+        internal void StateExecute(State state, CancellationToken cancellationToken, DateTime timeout)
+        {
+            while (state != null)
+            {
+                this._callStack.Add(state);
+
+                state.Execute(cancellationToken, timeout);
+
+                state = GetSuccessor(state, cancellationToken, timeout);
+            }
+        }
+
+        private static State GetSuccessor(State state, CancellationToken cancellationToken, DateTime timeout)
+        {
+            bool hasSuccessor = false;
+            State follow = null;
+            while (!hasSuccessor)
+            {
+                hasSuccessor = state.GetSuccessor(out follow);
+
+                cancellationToken.ThrowIfCancellationRequested();
+                timeout.ThrowIfTimeExceeded();
+
+                state.StateExit();
+            }
+
+            return follow;
         }
 
         /// <summary>
