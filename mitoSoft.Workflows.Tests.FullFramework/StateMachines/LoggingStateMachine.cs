@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace mitoSoft.Workflows.Tests.FullFramework
 {
-    internal class TestStateMachine : StateMachine
+    [Serializable]
+    internal class LoggingStateMachine : StateMachine
     {
-        public TestStateMachine(string name, int sleep, List<string> log)
+        public LoggingStateMachine(string name, int sleep, List<string> log)
         {
             this.AddNode(new State("Start", () =>
             {

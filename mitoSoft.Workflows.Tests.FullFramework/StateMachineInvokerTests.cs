@@ -245,8 +245,8 @@ namespace mitoSoft.Workflows.Tests.FullFramework
         {
             var log = new List<string>();
 
-            var inner1 = new TestStateMachine("inner1", 1000, log);
-            var inner2 = new TestStateMachine("inner2", 100, log);
+            var inner1 = new LoggingStateMachine("inner1", 1000, log);
+            var inner2 = new LoggingStateMachine("inner2", 100, log);
 
             var outer = new StateMachine()
                 .AddNode(new State("Start", () => log.Add("outer.Start")))
@@ -288,8 +288,8 @@ namespace mitoSoft.Workflows.Tests.FullFramework
             var log = new List<string>();
             FaultType faultType = FaultType.None;
 
-            var inner1 = new TestStateMachine("inner1", 1000, log);
-            var inner2 = new TestStateMachine("inner2", 100, log);
+            var inner1 = new LoggingStateMachine("inner1", 1000, log);
+            var inner2 = new LoggingStateMachine("inner2", 100, log);
 
             var stateMachine = new StateMachine()
                 .AddNode(new State("Start", () =>

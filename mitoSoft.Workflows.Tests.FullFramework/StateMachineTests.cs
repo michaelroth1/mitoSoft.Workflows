@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace mitoSoft.Workflows.Tests
+namespace mitoSoft.Workflows.Tests.FullFramework
 {
     [TestClass]
     public class StateMachineTests

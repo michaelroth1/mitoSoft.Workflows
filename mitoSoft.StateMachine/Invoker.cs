@@ -27,8 +27,8 @@ namespace mitoSoft.Workflows
         /// Invokes a state machine asynchronously
         /// </summary>
         public Task Invoke()
-        {
-            return this.Invoke(this._stateMachine.Start.Name);
+        {            
+            return this.Invoke(this._stateMachine.Activated?.Name ?? this._stateMachine.Start.Name);
         }
 
         /// <summary>

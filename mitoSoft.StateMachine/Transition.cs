@@ -1,4 +1,5 @@
 ﻿using mitoSoft.Graphs;
+using System;
 using System.Diagnostics;
 
 namespace mitoSoft.Workflows
@@ -8,6 +9,7 @@ namespace mitoSoft.Workflows
     /// <summary>
     /// A transition of a statemachine
     /// </summary>
+    [Serializable]
     [DebuggerDisplay(nameof(Transition) + " ({ToString()})")]
     public class Transition : Edge
     {

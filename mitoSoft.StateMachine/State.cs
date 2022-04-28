@@ -11,6 +11,7 @@ namespace mitoSoft.Workflows
     /// <summary>
     /// A state of a statemachine
     /// </summary>
+    [Serializable]  
     [DebuggerDisplay(nameof(State) + " ({ToString()})")]
     public class State : Node
     {

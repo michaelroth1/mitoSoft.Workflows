@@ -8,6 +8,7 @@ using System.Threading;
 
 namespace mitoSoft.Workflows
 {
+    [Serializable]
     [DebuggerDisplay(nameof(StateMachine) + " ({ToString()})")]
     public class StateMachine : Graph<State, Transition>
     {
@@ -18,6 +19,11 @@ namespace mitoSoft.Workflows
         /// Start state of the state machine
         /// </summary>
         public State Start { get; set; }
+
+        /// <summary>
+        /// Actually activated state of the state machine
+        /// </summary>
+        public State Activated { get; set; }
 
         /// <summary>
         /// Invokes the state machine
@@ -34,9 +40,14 @@ namespace mitoSoft.Workflows
         {
             this._callStack = new List<State>();
 
-            var state = this.Start;
-
-            StateExecute(state, cancellationToken, timeout);
+            if (this.Activated == null)
+            {
+                this.StateExecute(this.Start, cancellationToken, timeout);
+            }
+            else
+            {
+                this.StateExecute(this.Activated, cancellationToken, timeout);
+            }
         }
 
         internal void StateExecute(State state, CancellationToken cancellationToken, DateTime timeout)
@@ -44,6 +55,8 @@ namespace mitoSoft.Workflows
             while (state != null)
             {
                 this._callStack.Add(state);
+
+                this.Activated = state;
 
                 state.Execute(cancellationToken, timeout);
 
