@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using System.Xml.Serialization;
 
 namespace mitoSoft.Workflows.Tests.FullFramework
 {

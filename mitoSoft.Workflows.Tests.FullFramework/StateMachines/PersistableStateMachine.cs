@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace mitoSoft.Workflows.Tests.FullFramework.StateMachines
 {
     [Serializable]
-    internal class PersistableStateMachine : StateMachine
+    public class PersistableStateMachine : StateMachine
     {
         public PersistableStateMachine()
         {
