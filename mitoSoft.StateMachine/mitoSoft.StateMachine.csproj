@@ -11,9 +11,9 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/michaelroth1/mitoSoft.Workflows</PackageProjectUrl>
     <PackageTags>Graph State Transtions Statemachine Workflow Automation</PackageTags>
-    <Version>1.1.5</Version>
+    <Version>1.1.6</Version>
     <PackageIcon>mitoSoft.png</PackageIcon>
-    <PackageReleaseNotes>[BugFix] remove endless stacktraces in case of long-running state machines</PackageReleaseNotes>
+    <PackageReleaseNotes>[BugFix] NodeNotFoundException in case of missing state</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

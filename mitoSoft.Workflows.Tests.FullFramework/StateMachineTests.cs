@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using mitoSoft.Graphs.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -177,6 +178,22 @@ namespace mitoSoft.Workflows.Tests.FullFramework
                 .AddEdge("Start", "State1", () => { return true; })
                 .AddEdge("State1", "End", () => { return true; })
                 .Invoke();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NodeNotFoundException))]
+        public void MissingState()
+        {
+            //Variables
+            var log = new List<string>();
+            var now = DateTime.Now;
+
+            new StateMachine()
+                .AddNode(new TestState("Start", log))                
+                .AddEdge("Start", "State1", () => { return true; })
+                .Invoke();
+
+            Assert.IsFalse(true);
         }
     }
 }

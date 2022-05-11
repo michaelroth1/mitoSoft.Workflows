@@ -102,6 +102,16 @@ namespace mitoSoft.Workflows
         /// </summary>
         public StateMachine AddEdge(string sourceName, string targetName, Condition condition)
         {
+            if (this.GetNode(sourceName) == null)
+            {
+                throw new NodeNotFoundException(sourceName);
+            }
+
+            if (this.GetNode(targetName) == null)
+            {
+                throw new NodeNotFoundException(sourceName);
+            }
+
             if (!this.TryAddEdge(sourceName, targetName, condition, out _))
             {
                 throw new EdgeAlreadyExistingException(sourceName, targetName);
