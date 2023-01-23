@@ -28,7 +28,7 @@ namespace mitoSoft.Workflows
         /// <summary>
         /// Invokes the state machine
         /// </summary>
-        public void Invoke()
+        public virtual void Invoke()
         {
             this.Invoke(new CancellationToken(), new DateTime());
         }
@@ -36,7 +36,7 @@ namespace mitoSoft.Workflows
         /// <summary>
         /// Invokes the state machine
         /// </summary>
-        public void Invoke(CancellationToken cancellationToken, DateTime timeout)
+        public virtual void Invoke(CancellationToken cancellationToken, DateTime timeout)
         {
             this._callStack = new List<State>();
 
@@ -104,8 +104,8 @@ namespace mitoSoft.Workflows
         {
             var source = this.GetNode(sourceName);
             var target = this.GetNode(targetName);
-            
-            return this.AddEdge(source, target, condition); 
+
+            return this.AddEdge(source, target, condition);
         }
 
         /// <summary>

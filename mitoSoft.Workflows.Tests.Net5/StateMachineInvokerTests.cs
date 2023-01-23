@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using mitoSoft.Workflows.Enum;
+using mitoSoft.Workflows.Tests.FullFramework.StateMachines;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -426,6 +427,37 @@ namespace mitoSoft.Workflows.Tests.Net5
             syncEvent.WaitOne();
 
             Assert.AreEqual("Hello World;Completed", string.Join(";", log));
+        }
+
+        [TestMethod]
+        public void CatchCancelationInWorkflow()
+        {             
+            var stateMachine = new CatchCancelEventStateMachine();              
+
+            var invoker = new Invoker(stateMachine);
+            invoker.Completed += (sender, args) =>
+            {
+                stateMachine.Logger.Add("Ended");
+            };
+            invoker.Faulted += (sender, args) =>
+            {
+                stateMachine.Logger.Add("Canceled");
+            };
+
+            stateMachine.Invoker = invoker;
+
+            var t = invoker.Invoke();
+
+            stateMachine.Logger.Add("Started");
+
+            Thread.Sleep(100);
+
+            stateMachine.Logger.Add("BeforeCancelRequested");
+            invoker.Cancel();
+
+            t.Wait();
+
+            Assert.AreEqual("Started->BeforeCancelRequested->Canceled->CancelCatched", string.Join("->", stateMachine.Logger));
         }
     }
 }
