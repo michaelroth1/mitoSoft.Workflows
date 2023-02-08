@@ -82,12 +82,12 @@ namespace mitoSoft.Workflows
         /// </remarks>
         internal void Execute(CancellationToken cancellationToken, DateTime timeout)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCanceled();
             timeout.ThrowIfTimeExceeded();
 
             this.StateFunction();
 
-            cancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCanceled();
             timeout.ThrowIfTimeExceeded();
         }
 

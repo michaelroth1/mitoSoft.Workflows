@@ -72,7 +72,7 @@ namespace mitoSoft.Workflows
             {
                 hasSuccessor = state.GetSuccessor(out follow);
 
-                cancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCanceled();
                 timeout.ThrowIfTimeExceeded();
 
                 state.StateExit();

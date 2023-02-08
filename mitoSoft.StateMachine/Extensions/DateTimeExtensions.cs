@@ -1,4 +1,5 @@
-﻿using System;
+﻿using mitoSoft.Workflows.Exceptions;
+using System;
 
 namespace mitoSoft.Workflows.Extensions
 {
@@ -8,7 +9,7 @@ namespace mitoSoft.Workflows.Extensions
         {
             if (new DateTime() < value && value < DateTime.UtcNow)
             {
-                throw new TimeoutException("Timeout");
+                throw new StateMachineTimedOutException();
             }
         }
     }

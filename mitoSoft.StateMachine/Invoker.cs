@@ -1,5 +1,6 @@
 ﻿using mitoSoft.Workflows.Enum;
 using mitoSoft.Workflows.EventArgs;
+using mitoSoft.Workflows.Exceptions;
 using mitoSoft.Workflows.Extensions;
 using System;
 using System.Threading;
@@ -89,11 +90,11 @@ namespace mitoSoft.Workflows
 
                 Completed?.Invoke(this, new StateMachineCompletedEventArgs(_stateMachine));
             }
-            catch (TimeoutException ex) when (ex.Message == "Timeout")
+            catch (StateMachineTimedOutException ex) 
             {
                 Faulted?.Invoke(this, new StateMachineFaultedEventArgs(_stateMachine, FaultType.ByTimeout, ex));
             }
-            catch (OperationCanceledException ex)
+            catch (StateMachineCanceledException ex)
             {
                 Faulted?.Invoke(this, new StateMachineFaultedEventArgs(_stateMachine, FaultType.ByToken, ex));
             }
