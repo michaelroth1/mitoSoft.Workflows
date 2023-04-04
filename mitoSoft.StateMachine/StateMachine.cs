@@ -26,6 +26,18 @@ namespace mitoSoft.Workflows
         public State Activated { get; set; }
 
         /// <summary>
+        /// Name of the state machine
+        /// </summary>
+        public string Name { get; set; }
+
+        public StateMachine() : this("StateMachine") { }
+
+        public StateMachine(string name)
+        {
+            this.Name = name;
+        }
+
+        /// <summary>
         /// Invokes the state machine
         /// </summary>
         public virtual void Invoke()
