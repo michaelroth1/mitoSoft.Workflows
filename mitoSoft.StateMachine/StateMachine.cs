@@ -26,6 +26,16 @@ namespace mitoSoft.Workflows
         public State Activated { get; set; }
 
         /// <summary>
+        /// CancellationToken of the state machine
+        /// </summary>
+        public CancellationToken CancellationToken { get; private set; }
+
+        /// <summary>
+        /// Timeout of the state machine
+        /// </summary>
+        public DateTime Timeout { get; private set; }
+
+        /// <summary>
         /// Name of the state machine
         /// </summary>
         public string Name { get; set; }
@@ -69,6 +79,9 @@ namespace mitoSoft.Workflows
                 this._callStack.Add(state);
 
                 this.Activated = state;
+
+                this.CancellationToken = cancellationToken;
+                this.Timeout = timeout;
 
                 state.Execute(cancellationToken, timeout);
 
